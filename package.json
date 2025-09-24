@@ -1,0 +1,23 @@
+{
+  "name": "zwds-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r --filter './packages/*' build",
+    "typecheck": "tsc -b",
+    "lint": "eslint . --ext .ts,.tsx || true",
+    "test": "vitest run --coverage",
+    "dev:api": "pnpm --filter @zwds/api dev",
+    "dev:cli": "pnpm --filter @zwds/cli dev"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "eslint": "^8.57.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5",
+    "tsx": "^4.16.2"
+  }
+}
