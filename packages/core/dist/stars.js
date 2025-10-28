@@ -1,8 +1,8 @@
-// Direct JSON imports (works in both Node.js and Cloudflare Workers)
-// Note: TypeScript handles JSON imports with resolveJsonModule: true
-import bureauData from "./data/bureau.json" with { type: "json" };
-import ziweiTianfuMap from "./data/ziwei-tianfu-map.json" with { type: "json" };
-import starsMainData from "./data/stars-main.json" with { type: "json" };
+// Import data from JS modules (compatible with Cloudflare Workers esbuild)
+// JSON files are converted to JS modules for better compatibility
+import bureauData from "./data/bureau.js";
+import ziweiTianfuMap from "./data/ziwei-tianfu-map.js";
+import starsMainData from "./data/stars-main.js";
 // 地支順序（用於順時針/逆時針移動）
 const BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 /**

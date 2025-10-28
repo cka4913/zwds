@@ -1,10 +1,10 @@
-// Direct JSON imports (works in both Node.js and Cloudflare Workers)
-// Note: TypeScript handles JSON imports with resolveJsonModule: true
-import stemsBranchesData from "./data/stems-branches.json" with { type: "json" };
-import palaceOrderData from "./data/palace-order.json" with { type: "json" };
-import transformsYearData from "./data/transforms-year.json" with { type: "json" };
-import starsMainData from "./data/stars-main.json" with { type: "json" };
-import starsAssistData from "./data/stars-assist.json" with { type: "json" };
+// Import data from JS modules (compatible with Cloudflare Workers esbuild)
+// JSON files are converted to JS modules for better compatibility
+import stemsBranchesData from "./data/stems-branches.js";
+import palaceOrderData from "./data/palace-order.js";
+import transformsYearData from "./data/transforms-year.js";
+import starsMainData from "./data/stars-main.js";
+import starsAssistData from "./data/stars-assist.js";
 // ============ Stems & Branches ============
 export const HEAVENLY_STEMS = stemsBranchesData.heavenlyStems;
 export const EARTH_BRANCHES = stemsBranchesData.earthBranches;

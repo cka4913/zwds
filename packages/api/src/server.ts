@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import { makeChart, renderText } from "@zwds/core";
-import type { ChartMeta } from "@zwds/core/src/types";
+import type { ChartMeta } from "@zwds/core";
 
 const app = Fastify();
 
