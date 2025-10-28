@@ -1,6 +1,7 @@
 name = "zwds-api"
 main = "packages/workers/src/index.ts"
 compatibility_date = "2024-01-01"
+tsconfig = "packages/workers/tsconfig.json"
 
-# Node.js compatibility
-node_compat = true
+# Node.js compatibility (使用新标准)
+compatibility_flags = ["nodejs_compat"]

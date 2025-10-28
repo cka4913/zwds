@@ -1,4 +1,5 @@
 // Direct JSON imports (works in both Node.js and Cloudflare Workers)
+// Note: TypeScript handles JSON imports with resolveJsonModule: true
 import stemsBranchesData from "./data/stems-branches.json" with { type: "json" };
 import palaceOrderData from "./data/palace-order.json" with { type: "json" };
 import transformsYearData from "./data/transforms-year.json" with { type: "json" };
