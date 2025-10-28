@@ -4,13 +4,6 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "worker": "./src/index.ts",
-      "default": "./dist/index.js"
-    }
-  },
   "scripts": {
     "build": "tsc -b",
     "dev": "tsx src/index.ts"

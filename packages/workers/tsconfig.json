@@ -6,14 +6,7 @@
     "moduleResolution": "bundler",
     "module": "ESNext",
     "target": "ES2022",
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      "@zwds/core": ["../core/src/index.ts"],
-      "@zwds/core/*": ["../core/src/*"]
-    }
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
