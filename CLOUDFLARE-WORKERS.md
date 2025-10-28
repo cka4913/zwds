@@ -95,9 +95,15 @@ Cloudflare 会自动检测 `wrangler.toml` 并部署
 name = "zwds-api"
 main = "packages/workers/src/index.ts"
 compatibility_date = "2024-01-01"
-workers_dev = true
+
+# Node.js compatibility
 node_compat = true
 ```
+
+配置说明：
+- `main` - 入口文件路径（相对于项目根目录）
+- `compatibility_date` - Workers 兼容性日期
+- `node_compat` - 启用 Node.js 兼容层
 
 ### 环境变量
 
