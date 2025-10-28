@@ -243,27 +243,59 @@ export function renderText(chart: ZwdsChart): string {
       lines.push("輔星有：無");
     }
 
-    // 四化
-    if (palace.transforms && palace.transforms.length > 0) {
-      lines.push("四化：");
-
-      // 分離生年四化和宮干四化
-      const yearTransforms = palace.transforms.filter(t => t.isYearTransform);
-      const palaceTransforms = palace.transforms.filter(t => !t.isYearTransform);
-
-      // 先顯示生年四化
+    // 四化（分三個部分：生年四化、宮位四化、飛入四化）
+    // 1. 生年四化（飛入當前宮位的生年四化）
+    const yearTransforms = (palace.transforms || []).filter(t => t.isYearTransform);
+    if (yearTransforms.length > 0) {
+      lines.push("生年四化：");
       for (const t of yearTransforms) {
-        lines.push(`．生年四化${t.yearStem}干${t.star}${t.type}`);
+        lines.push(`．生年${t.yearStem}干${t.star}${t.type}`);
       }
+    }
 
-      // 再顯示宮干四化
-      for (const t of palaceTransforms) {
-        // 取得發射宮的天干
+    // 2. 宮位四化（當前宮位的天干產生的四化，飛向其他宮位）
+    const currentPalaceStem = palace.stem;
+    const outgoingTransforms: typeof palace.transforms = [];
+
+    // 遍歷所有宮位，找出從當前宮位發出的四化
+    if (currentPalaceStem) {
+      for (const targetPalaceName of palaceOrder) {
+        const targetPalace = chart.palaces[targetPalaceName];
+        if (targetPalace && targetPalace.transforms) {
+          for (const t of targetPalace.transforms) {
+            if (!t.isYearTransform && t.from === palaceName) {
+              outgoingTransforms.push(t);
+            }
+          }
+        }
+      }
+    }
+
+    if (outgoingTransforms.length > 0) {
+      lines.push("宮位四化：");
+      for (const t of outgoingTransforms) {
         const fromPalace = chart.palaces[t.from];
         const fromStem = fromPalace?.stem || "";
-        lines.push(`．${t.from}${fromStem}干飛入${t.to}${t.star}${t.type}`);
+        const isSelfTransform = t.from === t.to;
+        const selfNote = isSelfTransform ? `（自${t.type.slice(1)}）` : "";
+        lines.push(`．${t.from}${fromStem}干${t.star}${t.type}入${t.to}${selfNote}`);
       }
-    } else {
+    }
+
+    // 3. 飛入四化（其他宮位飛入當前宮位的四化，不含生年四化和自化）
+    const incomingTransforms = (palace.transforms || []).filter(t => !t.isYearTransform && t.from !== t.to);
+    if (incomingTransforms.length > 0) {
+      lines.push("飛入四化：");
+      for (const t of incomingTransforms) {
+        const fromPalace = chart.palaces[t.from];
+        const fromStem = fromPalace?.stem || "";
+        lines.push(`．${t.from}${fromStem}干${t.star}${t.type}入${t.to}`);
+      }
+    }
+
+    // 如果三個部分都沒有，顯示無
+    const totalTransforms = yearTransforms.length + outgoingTransforms.length + incomingTransforms.length;
+    if (totalTransforms === 0) {
       lines.push("四化：");
       lines.push("．（無）");
     }
