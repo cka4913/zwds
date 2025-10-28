@@ -1,12 +1,7 @@
-import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-// Load JSON data
-const bureauData = JSON.parse(readFileSync(join(__dirname, "data/bureau.json"), "utf-8"));
-const ziweiTianfuMap = JSON.parse(readFileSync(join(__dirname, "data/ziwei-tianfu-map.json"), "utf-8"));
-const starsMainData = JSON.parse(readFileSync(join(__dirname, "data/stars-main.json"), "utf-8"));
+// Direct JSON imports (works in both Node.js and Cloudflare Workers)
+import bureauData from "./data/bureau.json" with { type: "json" };
+import ziweiTianfuMap from "./data/ziwei-tianfu-map.json" with { type: "json" };
+import starsMainData from "./data/stars-main.json" with { type: "json" };
 // 地支順序（用於順時針/逆時針移動）
 const BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 /**

@@ -1,14 +1,9 @@
-import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-// Load JSON data
-const stemsBranchesData = JSON.parse(readFileSync(join(__dirname, "data/stems-branches.json"), "utf-8"));
-const palaceOrderData = JSON.parse(readFileSync(join(__dirname, "data/palace-order.json"), "utf-8"));
-const transformsYearData = JSON.parse(readFileSync(join(__dirname, "data/transforms-year.json"), "utf-8"));
-const starsMainData = JSON.parse(readFileSync(join(__dirname, "data/stars-main.json"), "utf-8"));
-const starsAssistData = JSON.parse(readFileSync(join(__dirname, "data/stars-assist.json"), "utf-8"));
+// Direct JSON imports (works in both Node.js and Cloudflare Workers)
+import stemsBranchesData from "./data/stems-branches.json" with { type: "json" };
+import palaceOrderData from "./data/palace-order.json" with { type: "json" };
+import transformsYearData from "./data/transforms-year.json" with { type: "json" };
+import starsMainData from "./data/stars-main.json" with { type: "json" };
+import starsAssistData from "./data/stars-assist.json" with { type: "json" };
 // ============ Stems & Branches ============
 export const HEAVENLY_STEMS = stemsBranchesData.heavenlyStems;
 export const EARTH_BRANCHES = stemsBranchesData.earthBranches;
