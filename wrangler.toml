@@ -1,0 +1,18 @@
+name = "zwds-api"
+main = "packages/workers/src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Workers configuration
+workers_dev = true
+
+# No build command needed - Wrangler will use esbuild directly
+[build]
+command = ""
+
+# Additional modules (esbuild will handle TypeScript)
+[build.upload]
+format = "modules"
+main = "./packages/workers/src/index.ts"
+
+# Node.js compatibility (if needed for some packages)
+node_compat = true

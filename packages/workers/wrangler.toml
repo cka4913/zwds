@@ -1,0 +1,14 @@
+name = "zwds-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Workers configuration
+workers_dev = true
+
+# Build configuration
+[build]
+command = ""
+
+# Environment variables (if needed)
+[vars]
+# Add any environment variables here

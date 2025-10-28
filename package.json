@@ -11,7 +11,9 @@
     "lint": "eslint . --ext .ts,.tsx || true",
     "test": "vitest run --coverage",
     "dev:api": "pnpm --filter @zwds/api dev",
-    "dev:cli": "pnpm --filter @zwds/cli dev"
+    "dev:cli": "pnpm --filter @zwds/cli dev",
+    "dev:workers": "pnpm --filter @zwds/workers dev",
+    "deploy:workers": "pnpm install && pnpm --filter @zwds/workers deploy"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
