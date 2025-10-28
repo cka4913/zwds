@@ -26,6 +26,8 @@ export interface PalaceSlot {
     to: PalaceName;
     star: string;
     type: Transform;
+    isYearTransform?: boolean;  // 是否為生年四化
+    yearStem?: HeavenlyStem;    // 如果是生年四化，記錄年干
   }>;
   decadeYears?: [number, number];
   flowYears?: number[];
@@ -35,7 +37,7 @@ export interface ChartMeta {
   sex: Sex;
   solar: string; // ISO, local time at tz
   lunar?: string;
-  tz: string; // IANA timezone
+  tz?: string; // IANA timezone (默认: Asia/Hong_Kong)
   location?: { lat: number; lon: number; place?: string };
 }
 

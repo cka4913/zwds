@@ -10,8 +10,7 @@ app.post("/api/zwds/chart", async (req, reply) => {
   const body = (req.body ?? {}) as Partial<ChartMeta> & { output?: { text?: boolean; json?: boolean } };
   const meta = {
     sex: body.sex ?? "female",
-    solar: body.solar ?? "1984-09-19T06:00:00",
-    tz: body.tz ?? "Asia/Hong_Kong"
+    solar: body.solar ?? "1984-09-19T06:00:00"
   } as ChartMeta;
   const chart = makeChart(meta);
   const res: any = { meta: chart.meta };
