@@ -38,6 +38,7 @@ export interface ChartMeta {
         lon: number;
         place?: string;
     };
+    bodyPalaceBranch?: EarthBranch;
 }
 export interface ZwdsChart {
     meta: ChartMeta;

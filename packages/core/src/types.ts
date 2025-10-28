@@ -39,6 +39,7 @@ export interface ChartMeta {
   lunar?: string;
   tz?: string; // IANA timezone (默认: Asia/Hong_Kong)
   location?: { lat: number; lon: number; place?: string };
+  bodyPalaceBranch?: EarthBranch; // 身宫地支
 }
 
 export interface ZwdsChart {

@@ -137,7 +137,8 @@ export function makeChart(meta: ChartMeta): ZwdsChart {
       sex: meta.sex,
       solar: meta.solar,
       lunar: lunarISO,
-      tz
+      tz,
+      bodyPalaceBranch
     },
     palaces
   };
@@ -193,6 +194,17 @@ export function renderText(chart: ZwdsChart): string {
 
   lines.push("");
 
+  // 找出身宫所在的宫位
+  let bodyPalaceName: PalaceName | null = null;
+  if (chart.meta.bodyPalaceBranch) {
+    for (const [name, palace] of Object.entries(chart.palaces)) {
+      if (palace && palace.branch === chart.meta.bodyPalaceBranch) {
+        bodyPalaceName = name as PalaceName;
+        break;
+      }
+    }
+  }
+
   // 宫位顺序（按照fixture格式）
   const palaceOrder: PalaceName[] = [
     "命宮", "兄弟宮", "夫妻宮", "子女宮", "財帛宮", "疾厄宮",
@@ -203,7 +215,12 @@ export function renderText(chart: ZwdsChart): string {
     const palace = chart.palaces[palaceName];
     if (!palace) continue;
 
-    lines.push(`【${palaceName}：宮位在${palace.stem}${palace.branch}】`);
+    // 如果当前宫位是身宫所在位置，显示"宮名/身宮"
+    const palaceTitle = palaceName === bodyPalaceName
+      ? `${palaceName}/身宮`
+      : palaceName;
+
+    lines.push(`【${palaceTitle}：宮位在${palace.stem}${palace.branch}】`);
 
     // 大限年份
     if (palace.decadeYears) {
