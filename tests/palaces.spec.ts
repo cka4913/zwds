@@ -8,10 +8,10 @@ import {
 } from "../packages/core/src/palaces";
 
 describe("Palaces - Life Palace (命宮) Positioning", () => {
-  it("should find life palace for fixture case: 八月卯時 → 午", () => {
-    // 1984-09-19 → 農曆八月廿四日卯時
+  it("should find life palace for fixture case: 十一月午時 → 午", () => {
+    // 2000-01-01 → 農曆1999年11月25日午時
     // 命宮應在午
-    const result = findLifePalaceBranch(8, "卯");
+    const result = findLifePalaceBranch(11, "午");
     expect(result).toBe("午");
   });
 
@@ -36,11 +36,11 @@ describe("Palaces - Life Palace (命宮) Positioning", () => {
 });
 
 describe("Palaces - Body Palace (身宮) Positioning", () => {
-  it("should find body palace for fixture case: 八月卯時 → 子", () => {
-    // 1984-09-19 → 農曆八月廿四日卯時
-    // 身宮應在子
-    const result = findBodyPalaceBranch(8, "卯");
-    expect(result).toBe("子");
+  it("should find body palace for fixture case: 十一月午時 → 午", () => {
+    // 2000-01-01 → 農曆1999年11月25日午時
+    // 身宮應在午（與命宮同位）
+    const result = findBodyPalaceBranch(11, "午");
+    expect(result).toBe("午");
   });
 
   it("should find body palace for 正月子時 → 寅", () => {
@@ -57,9 +57,9 @@ describe("Palaces - Body Palace (身宮) Positioning", () => {
 });
 
 describe("Palaces - Life Palace Stem (命宮天干)", () => {
-  it("should find life palace stem for fixture case: 甲年午宮 → 庚", () => {
-    // 1984甲子年，命宮在午 → 庚午
-    const result = findLifePalaceStem("甲", "午");
+  it("should find life palace stem for fixture case: 己年午宮 → 庚", () => {
+    // 1999己卯年，命宮在午 → 庚午
+    const result = findLifePalaceStem("己", "午");
     expect(result).toBe("庚");
   });
 
@@ -95,18 +95,18 @@ describe("Palaces - Arrangement", () => {
     expect(result["父母宮"]).toBe("未");
   });
 
-  it("should arrange 12 palaces for male from life palace 午 (順行)", () => {
-    const result = arrangePalaces("午", "male");
+  it("should arrange 12 palaces from life palace 午 (逆時針)", () => {
+    const result = arrangePalaces("午");
 
-    // 從命宮(午)開始順排（男命）
+    // 從命宮(午)開始逆時針排列
     expect(result["命宮"]).toBe("午");
-    expect(result["兄弟宮"]).toBe("未");
-    expect(result["夫妻宮"]).toBe("申");
-    expect(result["父母宮"]).toBe("巳");
+    expect(result["兄弟宮"]).toBe("巳");
+    expect(result["夫妻宮"]).toBe("辰");
+    expect(result["父母宮"]).toBe("未");
   });
 
-  it("should arrange 12 palaces for female from life palace 子", () => {
-    const result = arrangePalaces("子", "female");
+  it("should arrange 12 palaces from life palace 子", () => {
+    const result = arrangePalaces("子");
 
     expect(result["命宮"]).toBe("子");
     expect(result["兄弟宮"]).toBe("亥");
@@ -138,10 +138,10 @@ describe("Palaces - Stem Arrangement", () => {
 });
 
 describe("Palaces - Fixture Full Integration", () => {
-  it("should match fixture case: 1984-09-19 女命", () => {
-    const lunarMonth = 8;
-    const hourBranch = "卯" as const;
-    const yearStem = "甲" as const;
+  it("should match fixture case: 2000-01-01 女命", () => {
+    const lunarMonth = 11;
+    const hourBranch = "午" as const;
+    const yearStem = "己" as const;
     const sex = "female" as const;
 
     // 1. 命宮地支
@@ -150,7 +150,7 @@ describe("Palaces - Fixture Full Integration", () => {
 
     // 2. 身宮地支
     const bodyPalaceBranch = findBodyPalaceBranch(lunarMonth, hourBranch);
-    expect(bodyPalaceBranch).toBe("子");
+    expect(bodyPalaceBranch).toBe("午");
 
     // 3. 命宮天干
     const lifePalaceStem = findLifePalaceStem(yearStem, lifePalaceBranch);
@@ -177,7 +177,7 @@ describe("Palaces - Fixture Full Integration", () => {
       "遷移宮", "僕役宮", "官祿宮", "田宅宮", "福德宮", "父母宮"
     ] as const;
 
-    console.log("\n=== Palace Arrangement for 1984-09-19 Female ===");
+    console.log("\n=== Palace Arrangement for 2000-01-01 Female ===");
     palaceList.forEach(palace => {
       console.log(
         `${palace}: ${palaceStems[palace]}${palaceBranches[palace]}`
