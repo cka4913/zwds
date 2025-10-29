@@ -217,6 +217,80 @@ curl -X POST http://localhost:3000/api/zwds/chart \
 
 ---
 
+## 🌐 Live Demo
+
+**This API is compatible with major AI tools (ChatGPT, Claude, Gemini)!** Simply copy the curl or Python snippet below to perform Zi Wei Dou Shu chart calculations.
+
+### Try it Now
+
+The API is deployed on Cloudflare Workers and available at:
+
+```
+https://zwds-api.kenckau.workers.dev/api/zwds/chart
+```
+
+#### Using curl
+
+```bash
+curl -X POST https://zwds-api.kenckau.workers.dev/api/zwds/chart \
+  -H "Content-Type: application/json" \
+  -d '{"sex":"female","solar":"2000-01-01T12:00:00","output":{"json":false,"text":true}}'
+```
+
+#### Using Python
+
+```python
+import requests
+import json
+
+url = "https://zwds-api.kenckau.workers.dev/api/zwds/chart"
+payload = {
+    "sex": "female",
+    "solar": "2000-01-01T12:00:00",
+    "output": {
+        "json": False,
+        "text": True
+    }
+}
+
+response = requests.post(url, json=payload)
+result = response.json()
+
+# Print the text output
+print(result.get("text", ""))
+
+# Or access the JSON chart data
+# print(json.dumps(result.get("chart"), indent=2, ensure_ascii=False))
+```
+
+#### Using JavaScript/Node.js
+
+```javascript
+const url = "https://zwds-api.kenckau.workers.dev/api/zwds/chart";
+const payload = {
+  sex: "female",
+  solar: "2000-01-01T12:00:00",
+  output: {
+    json: false,
+    text: true
+  }
+};
+
+fetch(url, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+  .then(res => res.json())
+  .then(data => {
+    console.log(data.text);
+  });
+```
+
+> **💡 Tip for AI Tools**: You can directly paste these code snippets into ChatGPT, Claude, or Gemini with your birth information to get instant Zi Wei Dou Shu chart analysis!
+
+---
+
 ## 📦 Project Structure
 
 ```
@@ -636,6 +710,80 @@ curl -X POST http://localhost:3000/api/zwds/chart \
     }
   }' | jq -r '.text'
 ```
+
+---
+
+## 🌐 在線演示
+
+**本 API 已支援各大 AI 工具（ChatGPT、Claude、Gemini）！** 只需複製下方 curl 或 Python 片段即可運算紫微斗數命盤。
+
+### 立即試用
+
+本 API 已部署在 Cloudflare Workers，可直接訪問：
+
+```
+https://zwds-api.kenckau.workers.dev/api/zwds/chart
+```
+
+#### 使用 curl
+
+```bash
+curl -X POST https://zwds-api.kenckau.workers.dev/api/zwds/chart \
+  -H "Content-Type: application/json" \
+  -d '{"sex":"female","solar":"2000-01-01T12:00:00","output":{"json":false,"text":true}}'
+```
+
+#### 使用 Python
+
+```python
+import requests
+import json
+
+url = "https://zwds-api.kenckau.workers.dev/api/zwds/chart"
+payload = {
+    "sex": "female",
+    "solar": "2000-01-01T12:00:00",
+    "output": {
+        "json": False,
+        "text": True
+    }
+}
+
+response = requests.post(url, json=payload)
+result = response.json()
+
+# 印出文本輸出
+print(result.get("text", ""))
+
+# 或者訪問 JSON 命盤資料
+# print(json.dumps(result.get("chart"), indent=2, ensure_ascii=False))
+```
+
+#### 使用 JavaScript/Node.js
+
+```javascript
+const url = "https://zwds-api.kenckau.workers.dev/api/zwds/chart";
+const payload = {
+  sex: "female",
+  solar: "2000-01-01T12:00:00",
+  output: {
+    json: false,
+    text: true
+  }
+};
+
+fetch(url, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+  .then(res => res.json())
+  .then(data => {
+    console.log(data.text);
+  });
+```
+
+> **💡 AI 工具使用技巧**：您可以直接將這些程式碼片段貼到 ChatGPT、Claude 或 Gemini 中，並替換成您的出生資訊，即可立即獲得紫微斗數命盤分析！
 
 ---
 
