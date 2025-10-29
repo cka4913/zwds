@@ -16,7 +16,7 @@
     "deploy:workers": "pnpm install && pnpm --filter @zwds/workers deploy"
   },
   "devDependencies": {
-    "@types/node": "^20.11.30",
+    "@types/node": "^24.9.2",
     "eslint": "^8.57.0",
     "typescript": "^5.5.4",
     "vitest": "^2.0.5",
