@@ -12,12 +12,12 @@ import {
 
 describe("Calendar - ISO DateTime Parsing", () => {
   it("should parse ISO datetime correctly", () => {
-    const result = parseISODateTime("1984-09-19T06:00:00");
+    const result = parseISODateTime("2000-01-01T12:00:00");
     expect(result).toEqual({
-      year: 1984,
-      month: 9,
-      day: 19,
-      hour: 6
+      year: 2000,
+      month: 1,
+      day: 1,
+      hour: 12
     });
   });
 
@@ -28,26 +28,21 @@ describe("Calendar - ISO DateTime Parsing", () => {
 });
 
 describe("Calendar - Solar to Lunar Conversion", () => {
-  it("should convert fixture case 1984-09-19 correctly", () => {
-    const solar = { year: 1984, month: 9, day: 19, hour: 6 };
+  it("should convert fixture case 2000-01-01 correctly", () => {
+    const solar = { year: 2000, month: 1, day: 1, hour: 12 };
     const lunar = solarToLunar(solar);
 
-    expect(lunar.year).toBe(1984);
-    expect(lunar.month).toBe(8);
-    expect(lunar.day).toBe(24);
+    expect(lunar.year).toBe(1999);
+    expect(lunar.month).toBe(11);
+    expect(lunar.day).toBe(25);
     expect(lunar.isLeap).toBe(false);
-    expect(lunar.hour).toBe(6);
+    expect(lunar.hour).toBe(12);
   });
 
   it("should format lunar date correctly", () => {
-    const lunar = { year: 1984, month: 8, day: 24, isLeap: false, hour: 6 };
+    const lunar = { year: 1999, month: 11, day: 25, isLeap: false, hour: 12 };
     const formatted = formatLunarDate(lunar);
-    expect(formatted).toBe("1984 年 8 月 24 日");
-  });
-
-  it("should throw error for unimplemented dates", () => {
-    const solar = { year: 2000, month: 1, day: 1, hour: 0 };
-    expect(() => solarToLunar(solar)).toThrow();
+    expect(formatted).toBe("1999 年 11 月 25 日");
   });
 });
 
@@ -98,12 +93,12 @@ describe("Calendar - Hour Branch", () => {
     expect(getHourBranch(0)).toBe("子");
   });
 
-  it("should calculate 卯時 for hour 6 (fixture case)", () => {
-    expect(getHourBranch(6)).toBe("卯");
+  it("should calculate 午時 for hour 12 (fixture case)", () => {
+    expect(getHourBranch(12)).toBe("午");
   });
 
-  it("should calculate 午時 for hour 12", () => {
-    expect(getHourBranch(12)).toBe("午");
+  it("should calculate 卯時 for hour 6", () => {
+    expect(getHourBranch(6)).toBe("卯");
   });
 
   it("should calculate 亥時 for hour 22", () => {
@@ -128,44 +123,44 @@ describe("Calendar - Hour Stem", () => {
 });
 
 describe("Calendar - Day Stem-Branch (fixture)", () => {
-  it("should calculate 1984-09-19 as 甲子日", () => {
-    const solar = { year: 1984, month: 9, day: 19, hour: 6 };
+  it("should calculate 2000-01-01 as 戊午日", () => {
+    const solar = { year: 2000, month: 1, day: 1, hour: 12 };
     const result = getDayStemBranch(solar);
-    expect(result.stem).toBe("甲");
-    expect(result.branch).toBe("子");
+    expect(result.stem).toBe("戊");
+    expect(result.branch).toBe("午");
   });
 });
 
 describe("Calendar - Full Integration Test", () => {
-  it("should process fixture case 1984-09-19 06:00 completely", () => {
+  it("should process fixture case 2000-01-01 12:00 completely", () => {
     // Parse
-    const solar = parseISODateTime("1984-09-19T06:00:00");
-    expect(solar).toEqual({ year: 1984, month: 9, day: 19, hour: 6 });
+    const solar = parseISODateTime("2000-01-01T12:00:00");
+    expect(solar).toEqual({ year: 2000, month: 1, day: 1, hour: 12 });
 
     // Solar to Lunar
     const lunar = solarToLunar(solar);
     expect(lunar).toEqual({
-      year: 1984,
-      month: 8,
-      day: 24,
+      year: 1999,
+      month: 11,
+      day: 25,
       isLeap: false,
-      hour: 6
+      hour: 12
     });
 
-    // Year stem-branch
-    const year = getYearStemBranch(1984);
-    expect(year).toEqual({ stem: "甲", branch: "子" });
+    // Year stem-branch (農曆年份1999年)
+    const year = getYearStemBranch(1999);
+    expect(year).toEqual({ stem: "己", branch: "卯" });
 
-    // Month stem-branch
-    const month = getMonthStemBranch(8, "甲");
-    expect(month.branch).toBe("酉"); // 八月建酉（正月建寅，寅+7=酉）
+    // Month stem-branch (農曆11月)
+    const month = getMonthStemBranch(11, "己");
+    expect(month.branch).toBe("子"); // 十一月建子
 
     // Hour branch
-    const hourBranch = getHourBranch(6);
-    expect(hourBranch).toBe("卯");
+    const hourBranch = getHourBranch(12);
+    expect(hourBranch).toBe("午");
 
     // Day stem-branch
     const day = getDayStemBranch(solar);
-    expect(day).toEqual({ stem: "甲", branch: "子" });
+    expect(day).toEqual({ stem: "戊", branch: "午" });
   });
 });

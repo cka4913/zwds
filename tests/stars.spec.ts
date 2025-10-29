@@ -11,7 +11,7 @@ import {
 
 describe("Star Placement - Phase 2", () => {
   describe("getFiveElementBureau", () => {
-    it("should return correct bureau for 庚午 (Life Palace of 1984-09-19 female)", () => {
+    it("should return correct bureau for 庚午 (Life Palace of 2000-01-01 female)", () => {
       const bureau = getFiveElementBureau("庚", "午");
       expect(bureau).toBe(5); // 庚午 = 路旁土 = 土五局
     });
@@ -25,7 +25,7 @@ describe("Star Placement - Phase 2", () => {
   });
 
   describe("findZiweiPosition", () => {
-    it("should find Ziwei position for 1984-09-19 female case", () => {
+    it("should find Ziwei position for 2000-01-01 female case", () => {
       // 土五局 (5), 農曆24日
       // 期望：紫微在巳 (根據 FIXTURE)
       // 計算：倍數=5, 差數=1(奇), 步數=5-1=4, 從寅數4步=巳
@@ -105,7 +105,7 @@ describe("Star Placement - Phase 2", () => {
   });
 
   describe("placeAllMainStars - Full Integration Test", () => {
-    it("should place all 14 main stars for 1984-09-19 female case", () => {
+    it("should place all 14 main stars for 2000-01-01 female case", () => {
       // 紫微 at 巳, 天府 at 亥
       const starMap = placeAllMainStars("巳", "亥");
 

@@ -1,5 +1,5 @@
 import type { ZwdsChart, ChartMeta, PalaceName, PalaceSlot } from "./types.js";
-import { FIXTURE_1984F_TEXT } from "./fixtures-1984f.js";
+import { FIXTURE_2000F_TEXT } from "./fixtures-2000f.js";
 import { parseISODateTime, solarToLunar, getYearStemBranch, getMonthStemBranch, getDayStemBranch, getHourBranch, getHourStem } from "./calendar.js";
 import { findLifePalaceBranch, findBodyPalaceBranch, findLifePalaceStem, arrangePalaces, arrangePalaceStems } from "./palaces.js";
 import { getFiveElementBureau, findZiweiPosition, findTianfuPosition, placeAllMainStars } from "./stars.js";
