@@ -1,3 +1,431 @@
+# ZWDS API - Zi Wei Dou Shu Chart Generation API
+
+<div align="center">
+
+**Northern School Zi Wei Dou Shu Chart System** | Provides HTTP API and CLI Tool
+
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/cka4913/zwds)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+
+[English](#english) | [繁體中文](#繁體中文)
+
+</div>
+
+---
+
+<a name="english"></a>
+
+## 📖 About
+
+ZWDS API is an open-source Zi Wei Dou Shu (Purple Star Astrology) chart generation system based on Northern School (北派) traditional algorithms. This project provides:
+
+- 🌐 **HTTP API Server** (Fastify / Cloudflare Workers)
+- 💻 **Command Line Tool (CLI)**
+- 📊 **Complete Chart Data** (JSON + Text format)
+- 🔍 **Four Transformations System** (四化飞星)
+- ⏰ **Decade & Annual Fortune Calculation**
+
+> **⚠️ Note**: This system outputs chart data in **Traditional Chinese** only. While the API accepts English parameters, all astrological terms, palace names, star names, and text output are in Chinese following traditional Zi Wei Dou Shu conventions.
+
+### Features
+
+✅ Complete 14 main stars placement (Ziwei & Tianfu systems)
+✅ Six auspicious stars + six inauspicious stars + assist stars
+✅ Year stem transformations + palace stem flying transformations
+✅ Decade (10-year) and annual fortune calculation
+✅ Body palace display
+✅ Lunar calendar conversion (based on `lunar-javascript`)
+✅ Multiple output formats (JSON / Text)
+
+---
+
+## 🚀 Quick Start
+
+### Requirements
+
+- **Node.js** >= 18.x
+- **pnpm** >= 8.x
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/cka4913/zwds.git
+cd zwds
+
+# Install dependencies
+pnpm install
+
+# Build project
+pnpm build
+```
+
+---
+
+## 💻 Usage
+
+### Option 1: Command Line Tool (CLI)
+
+The simplest way to generate chart text output:
+
+```bash
+# Generate female chart
+pnpm dev:cli -- --sex female --solar 2000-01-01T12:00:00
+
+# Generate male chart
+pnpm dev:cli -- --sex male --solar 2000-01-01T12:00:00
+
+# Specify timezone
+pnpm dev:cli -- --sex female --solar 2000-01-01T12:00:00 --tz Asia/Hong_Kong
+```
+
+**Output Example** (in Traditional Chinese):
+
+```
+性別：女
+陽曆生日：2000 年 1 月 1 日 12 時
+農曆生日：1999 年 11 月 25 日 午 時
+命局：水二局，陽女
+
+【命宮：宮位在甲子】
+大限年份：2004-2013
+流年年份：1912,1924,1936,1948,1960,1972,1984,1996,2008,2020,2032,2044
+主星有：天同旺．太陰廟
+輔星有：左輔平．天魁平
+...
+```
+
+---
+
+### Option 2: HTTP API Server
+
+#### Start API Server
+
+```bash
+# Start development server (default port 3000)
+pnpm dev:api
+
+# Or specify port
+PORT=8080 pnpm dev:api
+```
+
+When you see this output, the server is ready:
+
+```
+ZWDS API listening on :3000
+```
+
+#### API Endpoints
+
+##### 1. Health Check
+
+```bash
+GET /api/health
+```
+
+**Response**:
+
+```json
+{
+  "ok": true
+}
+```
+
+##### 2. Generate Chart
+
+```bash
+POST /api/zwds/chart
+Content-Type: application/json
+
+{
+  "sex": "female",          // "male" or "female"
+  "solar": "2000-01-01T12:00:00",  // ISO 8601 format
+  "tz": "Asia/Hong_Kong",   // Optional, defaults to Asia/Hong_Kong
+  "output": {               // Optional
+    "text": true,           // Return text format
+    "json": true            // Return JSON format
+  }
+}
+```
+
+**Full Example**:
+
+```bash
+curl -X POST http://localhost:3000/api/zwds/chart \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sex": "female",
+    "solar": "2000-01-01T12:00:00"
+  }'
+```
+
+**Response Structure**:
+
+```json
+{
+  "meta": {
+    "sex": "female",
+    "solar": "2000-01-01T12:00:00",
+    "lunar": "1999-11-25T12:00:00",
+    "tz": "Asia/Hong_Kong",
+    "bodyPalaceBranch": "子"
+  },
+  "chart": {
+    "palaces": {
+      "命宮": {
+        "layer": "本命",
+        "name": "命宮",
+        "branch": "子",
+        "stem": "甲",
+        "mainStars": [
+          { "name": "天同", "status": "旺" },
+          { "name": "太陰", "status": "廟" }
+        ],
+        "assistStars": [
+          { "name": "左輔", "status": "平" },
+          { "name": "天魁", "status": "平" }
+        ],
+        "transforms": [...],
+        "decadeYears": [2004, 2013],
+        "flowYears": [1912, 1924, ...]
+      },
+      "兄弟宮": {...},
+      ...
+    }
+  },
+  "text": "性別：女\n陽曆生日：2000 年 1 月 1 日 12 時\n..."
+}
+```
+
+> **Note**: All field names in the JSON response (like `命宮`, `兄弟宮`, star names, etc.) are in Traditional Chinese as per Zi Wei Dou Shu conventions.
+
+##### 3. Get Text Format Only
+
+```bash
+curl -X POST http://localhost:3000/api/zwds/chart \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sex": "male",
+    "solar": "2000-01-01T12:00:00",
+    "output": {
+      "text": true,
+      "json": false
+    }
+  }' | jq -r '.text'
+```
+
+---
+
+## 📦 Project Structure
+
+```
+zwds/
+├── packages/
+│   ├── core/           # Core algorithm library
+│   │   ├── src/
+│   │   │   ├── calendar.ts      # Lunar conversion
+│   │   │   ├── palaces.ts       # Palace arrangement
+│   │   │   ├── stars.ts         # Main star placement
+│   │   │   ├── assist-stars.ts  # Assist star placement
+│   │   │   ├── transforms.ts    # Four transformations
+│   │   │   ├── fortune.ts       # Decade & annual fortune
+│   │   │   └── data/            # Data tables (JSON)
+│   │   └── dist/
+│   ├── api/            # Fastify HTTP API
+│   ├── cli/            # Command line tool
+│   └── workers/        # Cloudflare Workers API
+├── tests/              # Test files
+├── README.md
+├── LICENSE
+└── package.json
+```
+
+---
+
+## 🛠️ Development Guide
+
+### Local Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Development mode (with hot reload)
+pnpm dev:api    # Start API server
+pnpm dev:cli    # Run CLI
+
+# Build
+pnpm build      # Build all packages
+pnpm typecheck  # Type checking
+pnpm lint       # Code linting
+
+# Testing
+pnpm test       # Run tests
+pnpm test --coverage  # Generate coverage report
+```
+
+### Build Individual Package
+
+```bash
+pnpm --filter @zwds/core build
+pnpm --filter @zwds/api build
+pnpm --filter @zwds/cli build
+```
+
+---
+
+## 🌐 Deploy to Cloudflare Workers
+
+This project supports deployment to Cloudflare Workers edge network:
+
+```bash
+# Login to Cloudflare
+cd packages/workers
+pnpm wrangler login
+
+# Deploy
+pnpm deploy
+```
+
+---
+
+## 📚 API Reference
+
+### ChartMeta (Chart Metadata)
+
+| Field | Type | Description | Required |
+|-------|------|-------------|----------|
+| `sex` | `"male" \| "female"` | Gender | ✅ |
+| `solar` | `string` | Solar calendar birthday (ISO 8601) | ✅ |
+| `tz` | `string` | Timezone (IANA format) | ❌ Default: `Asia/Hong_Kong` |
+
+### PalaceSlot (Palace Data)
+
+Each palace contains the following fields:
+
+- **name**: Palace name (命宮, 兄弟宮, etc.) - in Chinese
+- **branch**: Earth Branch (子丑寅卯...) - in Chinese
+- **stem**: Heavenly Stem (甲乙丙丁...) - in Chinese
+- **mainStars**: List of 14 main stars
+- **assistStars**: List of assist stars
+- **transforms**: List of four transformations
+- **decadeYears**: Decade year range `[start, end]`
+- **flowYears**: Annual year list
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pnpm test
+
+# Run specific test
+pnpm test tests/calendar.spec.ts
+pnpm test tests/stars.spec.ts
+
+# Generate coverage report
+pnpm test --coverage
+```
+
+Test coverage includes:
+- ✅ Lunar calendar conversion algorithm
+- ✅ Palace arrangement (male/female forward/reverse)
+- ✅ 14 main star placement
+- ✅ Assist star placement
+- ✅ Four transformations
+- ✅ Decade and annual fortune calculation
+
+---
+
+## 📝 Version History
+
+### v0.1.0 (2025-01-28)
+
+**Initial Release**
+
+- ✅ Complete Zi Wei Dou Shu chart generation
+- ✅ HTTP API server (Fastify)
+- ✅ CLI command line tool
+- ✅ Cloudflare Workers support
+- ✅ 14 main stars + assist star system
+- ✅ Year stem transformations + palace stem flying transformations
+- ✅ Decade and annual fortune calculation
+- ✅ Body palace display
+
+---
+
+## 🤝 Contributing
+
+Issues and Pull Requests are welcome!
+
+1. Fork this repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Submit Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under **MIT License**.
+
+```
+MIT License
+
+Copyright (c) 2025 ZWDS Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+## 🙏 Acknowledgments
+
+- **lunar-javascript**: Lunar calendar conversion library
+- **Traditional Zi Wei Dou Shu algorithms**: Based on Northern School traditional formulas
+- Reference project: [iztro](https://github.com/SylarLong/iztro)
+
+---
+
+## 📧 Contact
+
+- **GitHub Issues**: [https://github.com/cka4913/zwds/issues](https://github.com/cka4913/zwds/issues)
+- **Project Homepage**: [https://github.com/cka4913/zwds](https://github.com/cka4913/zwds)
+
+---
+
+<div align="center">
+
+**⭐ If this project helps you, please give it a Star!**
+
+Made with ❤️ by ZWDS Contributors
+
+</div>
+
+---
+---
+
+<a name="繁體中文"></a>
+
 # ZWDS API - 紫微斗数排盘 API
 
 <div align="center">
@@ -8,7 +436,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 
-[English](#) | [繁體中文](#)
+[English](#english) | [繁體中文](#繁體中文)
 
 </div>
 
