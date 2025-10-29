@@ -28,6 +28,12 @@ ZWDS API is an open-source Zi Wei Dou Shu (Purple Star Astrology) chart generati
 
 > **⚠️ Note**: This system outputs chart data in **Traditional Chinese** only. While the API accepts English parameters, all astrological terms, palace names, star names, and text output are in Chinese following traditional Zi Wei Dou Shu conventions.
 
+### Why Northern School?
+
+Zi Wei Dou Shu is divided into two major schools: **Northern School (北派)** with 32 main stars and **Southern School (南派)** with 108 main stars. The Northern School emphasizes palace positions and Four Transformations (四化) dynamics, including concepts like "Self Palace" (我宮), "Other Palace" (他宮), Lu-Ji tracking (祿忌追蹤), self-transformation stars (自化星), and flying transformation layers (飛化層次), highlighting the interconnection, interaction, and complex multi-layered nature of the chart. The Southern School focuses primarily on star characteristics, star combinations, and single-layer interpretation, without self-transformation stars, resulting in a relatively flat and straightforward structure.
+
+Most existing tools and AI interpretation programs are based on Southern School principles, which tend to understand Zi Wei charts only through star characteristics and fail to adequately represent the unique multi-layered structure and Four Transformations dynamics of the Northern School. **Therefore, this tool is built on the Northern School Zi Wei Dou Shu system**, enabling AI and programs to read and interpret charts from a Northern School perspective, performing calculations and analysis that deeply embody Northern School characteristics such as palace interactions and Lu-Ji tracking.
+
 ### Features
 
 ✅ Complete 14 main stars placement (Ziwei & Tianfu systems)
@@ -525,6 +531,12 @@ ZWDS API 是一個開源的紫微斗數（Zi Wei Dou Shu）排盤系統，基於
 - 📊 **完整命盤資料**（JSON + 文本格式）
 - 🔍 **四化飛星系統**
 - ⏰ **大限流年計算**
+
+### 為什麼選擇北派？
+
+紫微斗數分為**北派（共32顆主星）**與**南派（共108顆主星）**兩大流派。北派斗數著重於宮位與四化變化，例如「我宮」、「他宮」、祿忌追蹤、自化星、飛化層次等，強調盤面的貫穿、互動與復雜層次。南派則以星曜情性、星曜組合與單一層面為主，無自化星，結構相對平面與直觀。
+
+現成工具與 AI 解讀程式大都基於南派法則，容易僅以星情方式理解紫微盤、未能充分呈現北派特有的盤面層次與四化變化。**因此本工具以北派紫微斗數盤為基礎**，方便 AI 與程式能讀取並用北派角度進行演繹、推算與分析，更深入體現命盤宮位互動及祿忌追蹤等北派特色。
 
 ### 特色功能
 
