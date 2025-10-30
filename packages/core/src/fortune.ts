@@ -210,3 +210,113 @@ export function getAnnualYearsForPalace(
 
   return years.sort((a, b) => a - b);
 }
+
+/**
+ * 计算流月宫位
+ *
+ * 流月规则：从流年宫位起，按农历月份顺时针数
+ * 例如：流年在父母宫，农历3月，则从父母宫顺时针数3个宫位
+ *
+ * @param annualPalace 流年宫位名称
+ * @param lunarMonth 农历月份（1-12）
+ * @param palaceBranches 各宫位的地支
+ * @returns 流月宫位名称
+ */
+export function getMonthlyPalace(
+  annualPalace: PalaceName,
+  lunarMonth: number,
+  palaceBranches: Record<PalaceName, EarthBranch>
+): Exclude<PalaceName, "身宮"> {
+  // 十二宫按顺序（不包含身宫）
+  const palaces = PALACE_NAMES.filter(p => p !== "身宮") as Exclude<PalaceName, "身宮">[];
+
+  // 找到流年宫位的索引
+  const annualIndex = palaces.indexOf(annualPalace as Exclude<PalaceName, "身宮">);
+  if (annualIndex === -1) return "命宮";
+
+  // 从流年宫位顺时针数月份数
+  // 农历月份从1开始，所以要减1
+  const monthlyIndex = (annualIndex + lunarMonth - 1) % 12;
+
+  return palaces[monthlyIndex];
+}
+
+/**
+ * 计算流日宫位
+ *
+ * 流日规则：从流月宫位起，按农历日期顺时针数
+ * 例如：流月在疾厄宫，农历19日，则从疾厄宫顺时针数19个宫位
+ *
+ * @param monthlyPalace 流月宫位名称
+ * @param lunarDay 农历日期（1-30）
+ * @param palaceBranches 各宫位的地支
+ * @returns 流日宫位名称
+ */
+export function getDailyPalace(
+  monthlyPalace: PalaceName,
+  lunarDay: number,
+  palaceBranches: Record<PalaceName, EarthBranch>
+): Exclude<PalaceName, "身宮"> {
+  // 十二宫按顺序（不包含身宫）
+  const palaces = PALACE_NAMES.filter(p => p !== "身宮") as Exclude<PalaceName, "身宮">[];
+
+  // 找到流月宫位的索引
+  const monthlyIndex = palaces.indexOf(monthlyPalace as Exclude<PalaceName, "身宮">);
+  if (monthlyIndex === -1) return "命宮";
+
+  // 从流月宫位顺时针数日期数
+  const dailyIndex = (monthlyIndex + lunarDay - 1) % 12;
+
+  return palaces[dailyIndex];
+}
+
+/**
+ * 计算流时宫位
+ *
+ * 流时规则：从流日宫位起，按时辰地支顺时针数
+ * 例如：流日在官禄宫，申时（地支=申，index=8），则从官禄宫顺时针数对应位置
+ *
+ * @param dailyPalace 流日宫位名称
+ * @param hourBranch 时辰地支
+ * @param palaceBranches 各宫位的地支
+ * @returns 流时宫位名称
+ */
+export function getHourlyPalace(
+  dailyPalace: PalaceName,
+  hourBranch: EarthBranch,
+  palaceBranches: Record<PalaceName, EarthBranch>
+): Exclude<PalaceName, "身宮"> {
+  // 十二宫按顺序（不包含身宫）
+  const palaces = PALACE_NAMES.filter(p => p !== "身宮") as Exclude<PalaceName, "身宮">[];
+
+  // 找到流日宫位的索引
+  const dailyIndex = palaces.indexOf(dailyPalace as Exclude<PalaceName, "身宮">);
+  if (dailyIndex === -1) return "命宮";
+
+  // 获取时辰地支的索引（子=0, 丑=1, ..., 亥=11）
+  const hourBranchIndex = getBranchIndex(hourBranch);
+
+  // 从流日宫位顺时针数时辰地支数
+  const hourlyIndex = (dailyIndex + hourBranchIndex) % 12;
+
+  return palaces[hourlyIndex];
+}
+
+/**
+ * 根据当前年龄查找当前大限所在宫位
+ *
+ * @param age 当前年龄（周岁）
+ * @param decades 各宫位的大限年份范围
+ * @returns 当前大限宫位名称，如果未找到则返回 undefined
+ */
+export function getCurrentDecadePalace(
+  age: number,
+  decades: Record<PalaceName, DecadeRange>
+): PalaceName | undefined {
+  for (const [palaceName, range] of Object.entries(decades)) {
+    if (age >= range.start && age <= range.end) {
+      return palaceName as PalaceName;
+    }
+  }
+  return undefined;
+}

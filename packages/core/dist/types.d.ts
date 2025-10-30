@@ -27,11 +27,18 @@ export interface PalaceSlot {
     }>;
     decadeYears?: [number, number];
     flowYears?: number[];
+    isDecadePalace?: boolean;
+    isAnnualPalace?: boolean;
+    isMonthlyPalace?: boolean;
+    isDailyPalace?: boolean;
+    isHourlyPalace?: boolean;
 }
 export interface ChartMeta {
     sex: Sex;
     solar: string;
     lunar?: string;
+    current?: string;
+    currentLunar?: string;
     tz?: string;
     location?: {
         lat: number;

@@ -93,3 +93,47 @@ export declare function formatDecadeRange(decade: DecadeRange, birthYear: number
  * @returns 年份数组（按时间顺序排列）
  */
 export declare function getAnnualYearsForPalace(palaceBranch: EarthBranch, birthYear: number, maxYears?: number): number[];
+/**
+ * 计算流月宫位
+ *
+ * 流月规则：从流年宫位起，按农历月份顺时针数
+ * 例如：流年在父母宫，农历3月，则从父母宫顺时针数3个宫位
+ *
+ * @param annualPalace 流年宫位名称
+ * @param lunarMonth 农历月份（1-12）
+ * @param palaceBranches 各宫位的地支
+ * @returns 流月宫位名称
+ */
+export declare function getMonthlyPalace(annualPalace: PalaceName, lunarMonth: number, palaceBranches: Record<PalaceName, EarthBranch>): Exclude<PalaceName, "身宮">;
+/**
+ * 计算流日宫位
+ *
+ * 流日规则：从流月宫位起，按农历日期顺时针数
+ * 例如：流月在疾厄宫，农历19日，则从疾厄宫顺时针数19个宫位
+ *
+ * @param monthlyPalace 流月宫位名称
+ * @param lunarDay 农历日期（1-30）
+ * @param palaceBranches 各宫位的地支
+ * @returns 流日宫位名称
+ */
+export declare function getDailyPalace(monthlyPalace: PalaceName, lunarDay: number, palaceBranches: Record<PalaceName, EarthBranch>): Exclude<PalaceName, "身宮">;
+/**
+ * 计算流时宫位
+ *
+ * 流时规则：从流日宫位起，按时辰地支顺时针数
+ * 例如：流日在官禄宫，申时（地支=申，index=8），则从官禄宫顺时针数对应位置
+ *
+ * @param dailyPalace 流日宫位名称
+ * @param hourBranch 时辰地支
+ * @param palaceBranches 各宫位的地支
+ * @returns 流时宫位名称
+ */
+export declare function getHourlyPalace(dailyPalace: PalaceName, hourBranch: EarthBranch, palaceBranches: Record<PalaceName, EarthBranch>): Exclude<PalaceName, "身宮">;
+/**
+ * 根据当前年龄查找当前大限所在宫位
+ *
+ * @param age 当前年龄（周岁）
+ * @param decades 各宫位的大限年份范围
+ * @returns 当前大限宫位名称，如果未找到则返回 undefined
+ */
+export declare function getCurrentDecadePalace(age: number, decades: Record<PalaceName, DecadeRange>): PalaceName | undefined;
