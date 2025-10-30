@@ -31,12 +31,20 @@ export interface PalaceSlot {
   }>;
   decadeYears?: [number, number];
   flowYears?: number[];
+  // 当前时间标记（用于显示 【大限】【流年】等标签）
+  isDecadePalace?: boolean;   // 是否为当前大限所在宫位
+  isAnnualPalace?: boolean;   // 是否为当前流年所在宫位
+  isMonthlyPalace?: boolean;  // 是否为当前流月所在宫位
+  isDailyPalace?: boolean;    // 是否为当前流日所在宫位
+  isHourlyPalace?: boolean;   // 是否为当前流时所在宫位
 }
 
 export interface ChartMeta {
   sex: Sex;
   solar: string; // ISO, local time at tz
   lunar?: string;
+  current?: string; // ISO, 当前时间（用于计算流年、流月、流日、流时），可选，默认为当前时间
+  currentLunar?: string; // 当前时间的农历
   tz?: string; // IANA timezone (默认: Asia/Hong_Kong)
   location?: { lat: number; lon: number; place?: string };
   bodyPalaceBranch?: EarthBranch; // 身宫地支
