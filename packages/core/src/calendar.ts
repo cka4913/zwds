@@ -248,3 +248,21 @@ export function getHourName(branch: EarthBranch): string {
   };
   return hourNames[branch];
 }
+
+/**
+ * 获取某一天的日地支（使用 lunar-javascript 库）
+ *
+ * @param solar 阳历日期
+ * @returns 日地支
+ */
+export function getDayBranch(solar: SolarDate): EarthBranch {
+  const solarDate = Solar.fromYmd(solar.year, solar.month, solar.day);
+  const lunar = solarDate.getLunar();
+
+  // 获取日柱（日干支）
+  const dayInGanZhi = lunar.getDayInGanZhi();
+  // dayInGanZhi 格式为"甲子"、"乙丑"等，取后一个字符作为地支
+  const branch = dayInGanZhi.charAt(1) as EarthBranch;
+
+  return branch;
+}

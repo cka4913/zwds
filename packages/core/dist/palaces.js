@@ -90,7 +90,7 @@ export function arrangePalaces(lifePalaceBranch) {
     // 十二宮按順序（不包含身宮）
     const palaces = PALACE_NAMES.filter(p => p !== "身宮");
     // 宮位一律從命宮逆時針排列
-    // 逆時針 = -1 (命宮 → 兄弟 → 夫妻 → 子女 → 財帛 → 疾厄 → 遷移 → 僕役 → 官祿 → 田宅 → 福德 → 父母)
+    // 逆時針 = -1 (命宮 → 兄弟 → 夫妻 → 子女 → 財帛 → 疾厄 → 遷移 → 交友 → 官祿 → 田宅 → 福德 → 父母)
     const direction = -1;
     for (let i = 0; i < palaces.length; i++) {
         const palaceName = palaces[i];

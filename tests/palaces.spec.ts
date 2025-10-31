@@ -88,7 +88,7 @@ describe("Palaces - Arrangement", () => {
     expect(result["財帛宮"]).toBe("寅");
     expect(result["疾厄宮"]).toBe("丑");
     expect(result["遷移宮"]).toBe("子");
-    expect(result["僕役宮"]).toBe("亥");
+    expect(result["交友宮"]).toBe("亥");
     expect(result["官祿宮"]).toBe("戌");
     expect(result["田宅宮"]).toBe("酉");
     expect(result["福德宮"]).toBe("申");
@@ -129,7 +129,7 @@ describe("Palaces - Stem Arrangement", () => {
     expect(result["財帛宮"]).toBe("丙"); // 財帛宮丙寅
     expect(result["疾厄宮"]).toBe("丁"); // 疾厄宮丁丑（注意：天干10個，地支12個，會重複）
     expect(result["遷移宮"]).toBe("丙"); // 遷移宮丙子
-    expect(result["僕役宮"]).toBe("乙"); // 僕役宮乙亥
+    expect(result["交友宮"]).toBe("乙"); // 交友宮乙亥
     expect(result["官祿宮"]).toBe("甲"); // 官祿宮甲戌
     expect(result["田宅宮"]).toBe("癸"); // 田宅宮癸酉
     expect(result["福德宮"]).toBe("壬"); // 福德宮壬申
@@ -174,7 +174,7 @@ describe("Palaces - Fixture Full Integration", () => {
     // 輸出驗證
     const palaceList = [
       "命宮", "兄弟宮", "夫妻宮", "子女宮", "財帛宮", "疾厄宮",
-      "遷移宮", "僕役宮", "官祿宮", "田宅宮", "福德宮", "父母宮"
+      "遷移宮", "交友宮", "官祿宮", "田宅宮", "福德宮", "父母宮"
     ] as const;
 
     console.log("\n=== Palace Arrangement for 2000-01-01 Female ===");

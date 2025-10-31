@@ -1,5 +1,6 @@
 import { makeChart, renderText } from "@zwds/core";
 import * as readline from "readline";
+import chalk from "chalk";
 // 解析命令行参数
 const args = new Map();
 let startIndex = 2;
@@ -38,6 +39,25 @@ function validateSolar(input) {
     }
     return null;
 }
+// 验证 current 参数（可选，格式同 solar）
+function validateCurrent(input) {
+    if (!input)
+        return null;
+    // 接受格式: YYYY-MM-DDTHH:mm:ss
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(input)) {
+        return input;
+    }
+    return null;
+}
+// 给文本添加颜色（仅处理流层标签）
+function colorizeText(text) {
+    return text
+        .replace(/【大限】/g, chalk.red("【大限】"))
+        .replace(/【流年】/g, chalk.blue("【流年】"))
+        .replace(/【流月】/g, chalk.green("【流月】"))
+        .replace(/【流日】/g, chalk.yellow("【流日】"))
+        .replace(/【流時】/g, chalk.magenta("【流時】"));
+}
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -52,6 +72,7 @@ function question(prompt) {
 async function main() {
     let sex = null;
     let solar = null;
+    let current = undefined;
     // 尝试从命令行读取性别
     const cmdSex = validateSex(args.get("sex"));
     if (cmdSex) {
@@ -68,12 +89,21 @@ async function main() {
     else if (args.has("solar")) {
         console.log("警告：命令行提供的日期时间参数无效");
     }
+    // 尝试从命令行读取 current 参数（可选）
+    const cmdCurrent = validateCurrent(args.get("current"));
+    if (cmdCurrent) {
+        current = cmdCurrent;
+    }
+    else if (args.has("current")) {
+        console.log("警告：命令行提供的 current 参数无效");
+    }
     // 如果参数都有效，直接生成命盘
     if (sex && solar) {
         rl.close();
         try {
-            const chart = makeChart({ sex, solar });
-            console.log(renderText(chart));
+            const chart = makeChart({ sex, solar, current });
+            const text = renderText(chart);
+            console.log(colorizeText(text));
             return;
         }
         catch (error) {
@@ -126,8 +156,9 @@ async function main() {
     rl.close();
     console.log("\n正在生成命盘...\n");
     try {
-        const chart = makeChart({ sex, solar });
-        console.log(renderText(chart));
+        const chart = makeChart({ sex, solar, current });
+        const text = renderText(chart);
+        console.log(colorizeText(text));
     }
     catch (error) {
         console.error("生成命盘时发生错误:", error);

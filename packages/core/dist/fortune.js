@@ -14,6 +14,30 @@ export function getStartingAge(bureau) {
     return bureau;
 }
 /**
+ * 计算流年斗君地支
+ *
+ * 正确算法：
+ * 1. 以流年地支为起点
+ * 2. 逆数到生月所落之宫（逆数生月-1步）
+ * 3. 由此宫起子时，顺数至生时所在位置即是流年斗君地支
+ *
+ * @param birthMonth 农历生月（1-12）
+ * @param birthHourBranch 生时地支
+ * @param birthYearBranch 生年太岁地支（未使用，保留接口兼容性）
+ * @param currentYearBranch 流年太岁地支
+ * @returns 流年斗君地支
+ */
+export function getDoujunBranch(birthMonth, birthHourBranch, birthYearBranch, currentYearBranch) {
+    // 1. 获取流年地支索引
+    const currentYearIndex = getBranchIndex(currentYearBranch);
+    // 2. 从流年地支逆数到生月所落之宫（逆数生月-1步）
+    const step1Index = ((currentYearIndex - (birthMonth - 1)) % 12 + 12) % 12;
+    // 3. 从该地支起子时，顺数到生时
+    const birthHourIndex = getBranchIndex(birthHourBranch);
+    const doujunIndex = (step1Index + birthHourIndex) % 12;
+    return getBranchByIndex(doujunIndex);
+}
+/**
  * 判断是否为阳（用于决定大限方向）
  *
  * 阳男阴女：顺时针
@@ -128,11 +152,11 @@ export function formatDecadeRange(decade, birthYear) {
  * 生成流年年份列表（显示该宫位对应的所有年份）
  *
  * 根据宫位的地支，找出所有该地支对应的年份
- * 例如：宫位在"巳"，则返回所有巳年（2025, 2037, 2049...和2013, 2001, 1989...）
+ * 年份范围：出生年 到 出生年+120年
  *
  * @param palaceBranch 宫位的地支
  * @param birthYear 出生年份（用于确定显示范围）
- * @param maxYears 最多返回多少个年份（默认12个，前后各6年周期）
+ * @param maxYears 最多返回多少个年份（默认12个）- 已弃用，保留参数以保持兼容性
  * @returns 年份数组（按时间顺序排列）
  */
 export function getAnnualYearsForPalace(palaceBranch, birthYear, maxYears = 12) {
@@ -148,84 +172,91 @@ export function getAnnualYearsForPalace(palaceBranch, birthYear, maxYears = 12) 
     }
     // 找到第一个该地支的年份（>=出生年）
     const firstYear = birthYear + offset;
-    // 生成前后的年份
-    const halfYears = Math.floor(maxYears / 2);
-    for (let i = -halfYears; i < maxYears - halfYears; i++) {
-        const year = firstYear + i * 12;
-        if (year > 1900 && year < 2200) { // 合理的年份范围
-            years.push(year);
-        }
+    // 生成从出生年到出生年+120年之间的所有该地支年份
+    const maxLifeYear = birthYear + 120;
+    for (let year = firstYear; year <= maxLifeYear; year += 12) {
+        years.push(year);
     }
-    return years.sort((a, b) => a - b);
+    return years;
 }
 /**
  * 计算流月宫位
  *
- * 流月规则：从流年宫位起，按农历月份顺时针数
- * 例如：流年在父母宫，农历3月，则从父母宫顺时针数3个宫位
+ * 流月规则：流年斗君即为正月，按农历月份顺行
+ * 公式：流月 = 斗君地支 + (农历月份 - 1)
  *
- * @param annualPalace 流年宫位名称
- * @param lunarMonth 农历月份（1-12）
+ * @param doujunBranch 流年斗君地支
+ * @param targetMonth 目标农历月份（1-12）
  * @param palaceBranches 各宫位的地支
  * @returns 流月宫位名称
  */
-export function getMonthlyPalace(annualPalace, lunarMonth, palaceBranches) {
+export function getMonthlyPalace(doujunBranch, targetMonth, palaceBranches) {
     // 十二宫按顺序（不包含身宫）
     const palaces = PALACE_NAMES.filter(p => p !== "身宮");
-    // 找到流年宫位的索引
-    const annualIndex = palaces.indexOf(annualPalace);
-    if (annualIndex === -1)
-        return "命宮";
-    // 从流年宫位顺时针数月份数
-    // 农历月份从1开始，所以要减1
-    const monthlyIndex = (annualIndex + lunarMonth - 1) % 12;
-    return palaces[monthlyIndex];
+    // 计算流月地支
+    const doujunIndex = getBranchIndex(doujunBranch);
+    const monthlyBranchIndex = (doujunIndex + targetMonth - 1) % 12;
+    const monthlyBranch = getBranchByIndex(monthlyBranchIndex);
+    // 找到该地支对应的宫位
+    for (const palaceName of palaces) {
+        if (palaceBranches[palaceName] === monthlyBranch) {
+            return palaceName;
+        }
+    }
+    return "命宮"; // 默认返回命宫
 }
 /**
  * 计算流日宫位
  *
- * 流日规则：从流月宫位起，按农历日期顺时针数
- * 例如：流月在疾厄宫，农历19日，则从疾厄宫顺时针数19个宫位
+ * 流日规则：以流月的位置为初一，然后顺行
+ * 公式：流日 = 流月地支 + (农历日 - 1)
  *
- * @param monthlyPalace 流月宫位名称
- * @param lunarDay 农历日期（1-30）
+ * @param monthlyBranch 流月地支
+ * @param lunarDay 农历日（1-30）
  * @param palaceBranches 各宫位的地支
  * @returns 流日宫位名称
  */
-export function getDailyPalace(monthlyPalace, lunarDay, palaceBranches) {
+export function getDailyPalace(monthlyBranch, lunarDay, palaceBranches) {
     // 十二宫按顺序（不包含身宫）
     const palaces = PALACE_NAMES.filter(p => p !== "身宮");
-    // 找到流月宫位的索引
-    const monthlyIndex = palaces.indexOf(monthlyPalace);
-    if (monthlyIndex === -1)
-        return "命宮";
-    // 从流月宫位顺时针数日期数
-    const dailyIndex = (monthlyIndex + lunarDay - 1) % 12;
-    return palaces[dailyIndex];
+    // 计算流日地支
+    const monthlyIndex = getBranchIndex(monthlyBranch);
+    const dailyBranchIndex = (monthlyIndex + lunarDay - 1) % 12;
+    const dailyBranch = getBranchByIndex(dailyBranchIndex);
+    // 找到该地支对应的宫位
+    for (const palaceName of palaces) {
+        if (palaceBranches[palaceName] === dailyBranch) {
+            return palaceName;
+        }
+    }
+    return "命宮"; // 默认返回命宫
 }
 /**
  * 计算流时宫位
  *
- * 流时规则：从流日宫位起，按时辰地支顺时针数
- * 例如：流日在官禄宫，申时（地支=申，index=8），则从官禄宫顺时针数对应位置
+ * 流时规则：以流日的位置为子时，然后顺数
+ * 公式：流时 = 流日地支 + 时辰地支索引
  *
- * @param dailyPalace 流日宫位名称
+ * @param dailyBranch 流日地支
  * @param hourBranch 时辰地支
  * @param palaceBranches 各宫位的地支
  * @returns 流时宫位名称
  */
-export function getHourlyPalace(dailyPalace, hourBranch, palaceBranches) {
+export function getHourlyPalace(dailyBranch, hourBranch, palaceBranches) {
     // 十二宫按顺序（不包含身宫）
     const palaces = PALACE_NAMES.filter(p => p !== "身宮");
-    // 找到流日宫位的索引
-    const dailyIndex = palaces.indexOf(dailyPalace);
-    if (dailyIndex === -1)
-        return "命宮";
-    // 获取时辰地支的索引（子=0, 丑=1, ..., 亥=11）
-    const hourBranchIndex = getBranchIndex(hourBranch);
-    // 从流日宫位顺时针数时辰地支数
-    const hourlyIndex = (dailyIndex + hourBranchIndex) % 12;
-    return palaces[hourlyIndex];
+    // 计算流时地支
+    const dailyIndex = getBranchIndex(dailyBranch);
+    const hourIndex = getBranchIndex(hourBranch);
+    const hourlyBranchIndex = (dailyIndex + hourIndex) % 12;
+    const hourlyBranch = getBranchByIndex(hourlyBranchIndex);
+    // 找到该地支对应的宫位
+    for (const palaceName of palaces) {
+        if (palaceBranches[palaceName] === hourlyBranch) {
+            return palaceName;
+        }
+    }
+    return "命宮"; // 默认返回命宫
 }
 /**
  * 根据当前年龄查找当前大限所在宫位
