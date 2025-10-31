@@ -91,3 +91,10 @@ export declare function getHourStem(hourBranch: EarthBranch, dayStem: HeavenlySt
  * 格式化時辰地支為中文時辰名
  */
 export declare function getHourName(branch: EarthBranch): string;
+/**
+ * 获取某一天的日地支（使用 lunar-javascript 库）
+ *
+ * @param solar 阳历日期
+ * @returns 日地支
+ */
+export declare function getDayBranch(solar: SolarDate): EarthBranch;

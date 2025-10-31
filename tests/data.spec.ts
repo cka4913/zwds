@@ -78,7 +78,7 @@ describe("Data Tables - Palaces", () => {
   it("should get correct opposite palaces", () => {
     expect(getOppositePalace("命宮")).toBe("遷移宮");
     expect(getOppositePalace("遷移宮")).toBe("命宮");
-    expect(getOppositePalace("兄弟宮")).toBe("僕役宮");
+    expect(getOppositePalace("兄弟宮")).toBe("交友宮");
     expect(getOppositePalace("財帛宮")).toBe("福德宮");
   });
 });

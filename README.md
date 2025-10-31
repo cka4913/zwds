@@ -25,6 +25,7 @@ ZWDS API is an open-source Zi Wei Dou Shu (Purple Star Astrology) chart generati
 - 📊 **Complete Chart Data** (JSON + Text format)
 - 🔍 **Four Transformations System** (四化飞星)
 - ⏰ **Decade & Annual Fortune Calculation**
+- 📅 **Flow Month/Day/Hour Palace Calculation** (流月、流日、流时)
 
 > **⚠️ Note**: This system outputs chart data in **Traditional Chinese** only. While the API accepts English parameters, all astrological terms, palace names, star names, and text output are in Chinese following traditional Zi Wei Dou Shu conventions.
 
@@ -40,9 +41,11 @@ Most existing tools and AI interpretation programs are based on Southern School 
 ✅ Six auspicious stars + six inauspicious stars + assist stars
 ✅ Year stem transformations + palace stem flying transformations
 ✅ Decade (10-year) and annual fortune calculation
+✅ Flow month/day/hour palace calculation (流月、流日、流时)
 ✅ Body palace display
 ✅ Lunar calendar conversion (based on `lunar-javascript`)
 ✅ Multiple output formats (JSON / Text)
+✅ Colored CLI output for flow layer labels
 
 ---
 
@@ -84,6 +87,9 @@ pnpm dev:cli -- --sex male --solar 2000-01-01T12:00:00
 
 # Specify timezone
 pnpm dev:cli -- --sex female --solar 2000-01-01T12:00:00 --tz Asia/Hong_Kong
+
+# Specify current date/time for flow palaces (流月、流日、流时)
+pnpm dev:cli -- --sex male --solar 1975-10-23T12:00:00 --current 2025-10-30T14:00:00
 ```
 
 **Output Example** (in Traditional Chinese):
@@ -147,6 +153,7 @@ Content-Type: application/json
 {
   "sex": "female",          // "male" or "female"
   "solar": "2000-01-01T12:00:00",  // ISO 8601 format
+  "current": "2025-10-30T14:00:00", // Optional, current date/time for flow palaces
   "tz": "Asia/Hong_Kong",   // Optional, defaults to Asia/Hong_Kong
   "output": {               // Optional
     "text": true,           // Return text format

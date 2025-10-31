@@ -6,7 +6,8 @@ app.post("/api/zwds/chart", async (req, reply) => {
     const body = (req.body ?? {});
     const meta = {
         sex: body.sex ?? "female",
-        solar: body.solar ?? "1984-09-19T06:00:00"
+        solar: body.solar ?? "1984-09-19T06:00:00",
+        current: body.current // 可选，默认为当前时间（由 makeChart 处理）
     };
     const chart = makeChart(meta);
     const res = { meta: chart.meta };
