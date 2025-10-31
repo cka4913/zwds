@@ -8,7 +8,7 @@ declare namespace _default {
         let 財帛宮: number;
         let 疾厄宮: number;
         let 遷移宮: number;
-        let 僕役宮: number;
+        let 交友宮: number;
         let 官祿宮: number;
         let 田宅宮: number;
         let 福德宮: number;
@@ -29,8 +29,8 @@ declare namespace _default {
         export { 疾厄宮_1 as 疾厄宮 };
         let 遷移宮_1: string;
         export { 遷移宮_1 as 遷移宮 };
-        let 僕役宮_1: string;
-        export { 僕役宮_1 as 僕役宮 };
+        let 交友宮_1: string;
+        export { 交友宮_1 as 交友宮 };
         let 官祿宮_1: string;
         export { 官祿宮_1 as 官祿宮 };
         let 田宅宮_1: string;
